@@ -1,4 +1,5 @@
 #include <limits>
+#include <iterator>
 #include "sinhaa-vector.h"
 
 //Exeptions
@@ -70,6 +71,66 @@ T& sinhaa::vector<T>::back () {
 }
 
 //Iterators
+template <typename T>
+T* sinhaa::vector<T>::begin () {
+    return &data[0];
+}
+
+template <typename T>
+const T* sinhaa::vector<T>::begin () const {
+    return &data[0];
+}
+
+template <typename T>
+const T* sinhaa::vector<T>::cbegin () const noexcept {
+    return &data[0];
+}
+
+template <typename T>
+T* sinhaa::vector<T>::end () {
+    return &data[length];
+}
+
+template <typename T>
+const T* sinhaa::vector<T>::end () const {
+    return &data[length];
+}
+
+template <typename T>
+const T* sinhaa::vector<T>::cend () const noexcept {
+    return &data[length];
+}
+
+template <typename T>
+std::reverse_iterator<T*> sinhaa::vector<T>::rbegin () {
+    return std::reverse_iterator<T*>(begin());
+}
+
+template <typename T>
+const std::reverse_iterator<T*> sinhaa::vector<T>::rbegin () const {
+    return std::reverse_iterator<const T*>(begin());
+}
+
+template <typename T>
+const std::reverse_iterator<T*> sinhaa::vector<T>::crbegin () const noexcept {
+    return std::reverse_iterator<const T*>(cbegin());
+}
+
+template <typename T>
+std::reverse_iterator<T*> sinhaa::vector<T>::rend () {
+    return std::reverse_iterator<T*>(end());
+}
+
+template <typename T>
+const std::reverse_iterator<T*> sinhaa::vector<T>::rend () const {
+    return std::reverse_iterator<const T*>(end());
+
+}
+
+template <typename T>
+const std::reverse_iterator<T*> sinhaa::vector<T>::crend () const noexcept {
+    return std::reverse_iterator<const T*>(cend());
+}
 
 //Capacity
 template <typename T>
