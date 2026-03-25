@@ -223,7 +223,43 @@ T* sinhaa::vector<T>::erase (T* first, T* last)
     return last;
 }
 
+template <typename T>
+T* sinhaa::vector<T>::insert(const T* pos, const T& value)
+{
+    size_t index = pos - data;
 
+    if (length == capacity)
+        reallocate(capacity * 2);
+
+    T* non_const_pos = data + index;
+
+    for (T* it = data + length; it != non_const_pos; --it)
+        *it = *(it - 1);
+
+    *non_const_pos = value;
+    length++;
+
+    return non_const_pos;
+}
+
+template <typename T>
+T* sinhaa::vector<T>::insert(const T* pos, T&& value)
+{
+    size_t index = pos - data;
+
+    if (length == capacity)
+        reallocate(capacity * 2);
+
+    T* non_const_pos = data + index;
+
+    for (T* it = data + length; it != non_const_pos; --it)
+        *it = std::move(*(it - 1));
+
+    *non_const_pos = std::move(value);
+    length++;
+
+    return non_const_pos;
+}
 
 template <typename T>
 void sinhaa::vector<T>::push_back (int value)
