@@ -55,7 +55,16 @@ namespace sinhaa {
 
             //Modifiers
             void clear ();
-            //some impl left
+            T* erase (T* pos);
+            T* erase (const T* pos);
+            T* erase (T* first, T* last);
+            T* erase (const T* first, const T* last);
+            T* insert (const T* pos, const T& value);
+            T* insert (const T* pos, T&& value);
+            T* insert (const T* pos, size_t count, const T& value);
+            template <class InputIt>
+            T* insert (const T* pos, InputIt first, InputIt last);
+            T* insert (const T* pos, std::initializer_list<T> ilist);
             void push_back (int value);
             void pop_back ();
             void resize (size_t new_capacity);
