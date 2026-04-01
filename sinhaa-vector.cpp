@@ -11,7 +11,7 @@ const char* sinhaa::out_of_bounds_error::what () const noexcept {
 template <typename T>
 void sinhaa::vector<T>::reallocate ()
 {
-    resize(capacity * 2);
+    resize(capacity? capacity * 2 : 1);
 }
 
 //Member Functions
@@ -226,6 +226,9 @@ T* sinhaa::vector<T>::erase (T* first, T* last)
 template <typename T>
 T* sinhaa::vector<T>::insert(const T* pos, const T& value)
 {
+    if (pos < data || pos > data + length)
+        throw sinhaa::out_of_bounds_error();
+        
     size_t index = pos - data;
 
     if (length == capacity)
@@ -245,10 +248,13 @@ T* sinhaa::vector<T>::insert(const T* pos, const T& value)
 template <typename T>
 T* sinhaa::vector<T>::insert(const T* pos, T&& value)
 {
+    if (pos < data || pos > data + length)
+        throw sinhaa::out_of_bounds_error();
+
     size_t index = pos - data;
 
     if (length == capacity)
-        reallocate(capacity * 2);
+        reallocate();
 
     T* non_const_pos = data + index;
 
@@ -259,6 +265,66 @@ T* sinhaa::vector<T>::insert(const T* pos, T&& value)
     length++;
 
     return non_const_pos;
+}
+
+template <typename T>
+T* sinhaa::vector<T>::insert (const T *pos, size_t count, const T &value)
+{
+    if (pos < data || pos > data + length)
+        throw sinhaa::out_of_bounds_error();
+
+    size_t index = pos - data;
+    
+    if (length + count > capacity) 
+        reserve(length + count);
+
+    T* non_const_pos = data + index;
+
+    for (T* it = data + length - 1; it != non_const_pos - 1; --it)
+        *(it + count) = *it;
+
+    for (T* it = non_const_pos; it != non_const_pos + count; ++it)
+        *it = value;
+    
+    length += count;
+
+    return non_const_pos;
+}
+
+template <typename T>
+template <class InputIt>
+T* sinhaa::vector<T>::insert (const T* pos, InputIt first, InputIt last)
+{
+    if (pos < data || pos > data + length)
+        throw sinhaa::out_of_bounds_error();
+
+    size_t index = pos - data;
+
+    size_t count = 0;
+    for (InputIt it = first; it != last; ++it)
+        ++count;
+
+    if (length + count > capacity)
+        reserve(length + count);
+
+    T* non_const_pos = data + index;
+
+    for (T* it = data + length - 1; it != non_const_pos + 1; --it)
+        *(it + count) = *it;
+
+    T* dest = non_const_pos;
+    for (InputIt it = first; it != last; it++, dest++)
+        *dest = *it;
+
+    length += count;
+
+    return non_const_pos;
+}
+
+template <typename T>
+T* sinhaa::vector<T>::insert (const T* pos, std::initializer_list<T> ilist)
+{
+    return insert(pos, ilist.begin(), ilist.end());
 }
 
 template <typename T>
