@@ -4,32 +4,40 @@
 #define SINHAA_VECTOR_H
 
 namespace sinhaa {
-    
-    class out_of_bounds_error : public std::exception {
-    public:
-        const char* what() const noexcept override;
-    };
-    
     template <typename T>
     class vector {
         private:
-            size_t length {};
-            size_t capacity {};
-            T* data {};
+            size_t m_length {};
+            size_t m_capacity {};
+            T* m_data {};
             void reallocate ();
         
         public:
             //Member Functions
-            vector<T> ();
+            vector ();
+            explicit vector (size_t count);
+            vector (size_t count, const T& value);
+            template <class InputIt>
+            vector (InputIt first, InputIt last);
+            vector (const vector& other);
+            vector (vector&& other);
+            vector (std::initializer_list<T> init);
             ~vector ();
-            vector& operator= (const vector& x);
+            vector& operator= (const vector& other);
+            vector& operator= (vector&& other);
+            vector& operator= (std::initializer_list<T> ilist);
 
             //Element Access
-            T& operator[] (int index);
+            T& operator[] (size_t index);
+            const T& operator[] (size_t index) const;
             T& at (size_t pos);
+            const T& at (size_t pos) const;
             T* data ();
-            T& front();
+            const T* data () const;
+            T& front ();
+            const T& front () const;
             T& back ();
+            const T& back () const;
 
             //Iterators
             T* begin ();
@@ -65,12 +73,16 @@ namespace sinhaa {
             template <class InputIt>
             T* insert (const T* pos, InputIt first, InputIt last);
             T* insert (const T* pos, std::initializer_list<T> ilist);
-            void push_back (int value);
+            template <class... Args>
+            T* emplace (const T* pos, Args&&... args);
+            template <class... Args>
+            void emplace_back (Args&&... args);
+            void push_back (const T& value);
+            void push_back (T&& value);
             void pop_back ();
             void resize (size_t new_capacity);
-            void resize (size_t new_capacity, T value);
+            void resize (size_t new_capacity, const T& value);
             void swap (vector& other);
-            
     };
 }
 
